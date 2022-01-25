@@ -36,16 +36,13 @@ TEST_DTYPES_ON_MODIN = []
 for dtype_cls in pandas_engine.Engine.get_registered_dtypes():
     if (
         dtype_cls in UNSUPPORTED_STRATEGY_DTYPE_CLS
-        or pandas_engine.Engine.dtype(dtype_cls)
-        not in SUPPORTED_STRATEGY_DTYPES
+        or pandas_engine.Engine.dtype(dtype_cls) not in SUPPORTED_STRATEGY_DTYPES
     ):
         continue
     TEST_DTYPES_ON_MODIN.append(pandas_engine.Engine.dtype(dtype_cls))
 
 
-ENGINES = os.getenv("CI_MODIN_ENGINES", "").split(",")
-if ENGINES == [""]:
-    ENGINES = ["ray", "dask"]
+ENGINES = ["ray", "dask"]
 
 
 @pytest.fixture(scope="module", params=ENGINES, autouse=True)
@@ -178,9 +175,7 @@ def test_index_dtypes(
     if dtype is bool:
         assert sample.dtype == "object"
         return
-    assert isinstance(
-        schema(mpd.DataFrame(pd.DataFrame(index=sample))), mpd.DataFrame
-    )
+    assert isinstance(schema(mpd.DataFrame(pd.DataFrame(index=sample))), mpd.DataFrame)
 
 
 @pytest.mark.parametrize(
@@ -251,9 +246,7 @@ def test_unique():
 
 def test_required_column():
     """Test the required column raises error."""
-    required_schema = pa.DataFrameSchema(
-        {"field": pa.Column(int, required=True)}
-    )
+    required_schema = pa.DataFrameSchema({"field": pa.Column(int, required=True)})
     schema = pa.DataFrameSchema({"field_": pa.Column(int, required=False)})
 
     data = mpd.DataFrame({"field": [1, 2, 3]})
@@ -368,10 +361,7 @@ def test_schema_model():
         Schema.validate(invalid_df, lazy=True)
     except pa.errors.SchemaErrors as err:
         expected_failures = {-1, "d", "float_field"}
-        assert (
-            set(err.failure_cases["failure_case"].tolist())
-            == expected_failures
-        )
+        assert set(err.failure_cases["failure_case"].tolist()) == expected_failures
 
 
 @pytest.mark.parametrize(
