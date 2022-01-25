@@ -21,65 +21,65 @@ env:
 
 jobs:
 
-  lint:
-    name: Linters (${{ matrix.python-version }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.7", "3.8", "3.9"]
-    defaults:
-      run:
-        shell: bash -l {0}
+  # lint:
+  #   name: Linters (${{ matrix.python-version }})
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       python-version: ["3.7", "3.8", "3.9"]
+  #   defaults:
+  #     run:
+  #       shell: bash -l {0}
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip  # ubuntu location
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-dev.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Install dependencies
-        run: python -m pip install -r requirements-dev.txt
-      - name: Pip info
-        run: python -m pip list
+  #     - name: Set up Python ${{ matrix.python-version }}
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - uses: actions/cache@v2
+  #       with:
+  #         path: ~/.cache/pip  # ubuntu location
+  #         key: ${{ runner.os }}-pip-${{ hashFiles('requirements-dev.txt') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-pip-
+  #     - name: Install dependencies
+  #       run: python -m pip install -r requirements-dev.txt
+  #     - name: Pip info
+  #       run: python -m pip list
 
-      - name: Check requirements
-        run: >
-          nox
-          -db virtualenv -r
-          --non-interactive
-          --python ${{ matrix.python-version }}
-          --session requirements-${{ matrix.python-version }}
+  #     - name: Check requirements
+  #       run: >
+  #         nox
+  #         -db virtualenv -r
+  #         --non-interactive
+  #         --python ${{ matrix.python-version }}
+  #         --session requirements-${{ matrix.python-version }}
 
-      - name: Check isort and black formatting
-        run: >
-          nox
-          -db virtualenv -r
-          --non-interactive
-          --session black isort
+  #     - name: Check isort and black formatting
+  #       run: >
+  #         nox
+  #         -db virtualenv -r
+  #         --non-interactive
+  #         --session black isort
 
-      - name: Pylint
-        run: >
-          nox
-          -db virtualenv -r
-          --non-interactive
-          --python ${{ matrix.python-version }}
-          --session lint-${{ matrix.python-version }}
+  #     - name: Pylint
+  #       run: >
+  #         nox
+  #         -db virtualenv -r
+  #         --non-interactive
+  #         --python ${{ matrix.python-version }}
+  #         --session lint-${{ matrix.python-version }}
 
-      - name: Mypy Type Checking
-        run: >
-          nox
-          -db virtualenv -r
-          --non-interactive
-          --python ${{ matrix.python-version }}
-          --session mypy-${{ matrix.python-version }}
+  #     - name: Mypy Type Checking
+  #       run: >
+  #         nox
+  #         -db virtualenv -r
+  #         --non-interactive
+  #         --python ${{ matrix.python-version }}
+  #         --session mypy-${{ matrix.python-version }}
 
   tests:
     name: >
@@ -124,47 +124,47 @@ jobs:
           --non-interactive
           --session "tests-${{ matrix.python-version }}(extra='core', pandas='${{ matrix.pandas-version }}')"
 
-      - name: Unit Tests - Dask
-        run: >
-          nox
-          -db virtualenv -r -v
-          --non-interactive
-          --session "tests-${{ matrix.python-version }}(extra='dask', pandas='${{ matrix.pandas-version }}')"
+      # - name: Unit Tests - Dask
+      #   run: >
+      #     nox
+      #     -db virtualenv -r -v
+      #     --non-interactive
+      #     --session "tests-${{ matrix.python-version }}(extra='dask', pandas='${{ matrix.pandas-version }}')"
 
-      - name: Unit Tests - Hypotheses
-        run: >
-          nox
-          -db virtualenv -r -v
-          --non-interactive
-          --session "tests-${{ matrix.python-version }}(extra='hypotheses', pandas='${{ matrix.pandas-version }}')"
+      # - name: Unit Tests - Hypotheses
+      #   run: >
+      #     nox
+      #     -db virtualenv -r -v
+      #     --non-interactive
+      #     --session "tests-${{ matrix.python-version }}(extra='hypotheses', pandas='${{ matrix.pandas-version }}')"
 
-      - name: Unit Tests - IO
-        run: >
-          nox
-          -db virtualenv -r -v
-          --non-interactive
-          --session "tests-${{ matrix.python-version }}(extra='io', pandas='${{ matrix.pandas-version }}')"
+      # - name: Unit Tests - IO
+      #   run: >
+      #     nox
+      #     -db virtualenv -r -v
+      #     --non-interactive
+      #     --session "tests-${{ matrix.python-version }}(extra='io', pandas='${{ matrix.pandas-version }}')"
 
-      - name: Unit Tests - Strategies
-        run: >
-          nox
-          -db virtualenv -r -v
-          --non-interactive
-          --session "tests-${{ matrix.python-version }}(extra='strategies', pandas='${{ matrix.pandas-version }}')"
+      # - name: Unit Tests - Strategies
+      #   run: >
+      #     nox
+      #     -db virtualenv -r -v
+      #     --non-interactive
+      #     --session "tests-${{ matrix.python-version }}(extra='strategies', pandas='${{ matrix.pandas-version }}')"
 
-      - name: Unit Tests - Mypy
-        run: >
-          nox
-          -db virtualenv -r -v
-          --non-interactive
-          --session "tests-${{ matrix.python-version }}(extra='mypy', pandas='${{ matrix.pandas-version }}')"
+      # - name: Unit Tests - Mypy
+      #   run: >
+      #     nox
+      #     -db virtualenv -r -v
+      #     --non-interactive
+      #     --session "tests-${{ matrix.python-version }}(extra='mypy', pandas='${{ matrix.pandas-version }}')"
 
-      - name: Unit Tests - Koalas
-        run: >
-          nox
-          -db virtualenv -r -v
-          --non-interactive
-          --session "tests-${{ matrix.python-version }}(extra='koalas', pandas='${{ matrix.pandas-version }}')"
+      # - name: Unit Tests - Koalas
+      #   run: >
+      #     nox
+      #     -db virtualenv -r -v
+      #     --non-interactive
+      #     --session "tests-${{ matrix.python-version }}(extra='koalas', pandas='${{ matrix.pandas-version }}')"
 
       - name: Unit Tests - Modin [MacOS, Ubuntu]
         if: ${{ matrix.os != 'windows-latest'}}
@@ -180,19 +180,19 @@ jobs:
         env:
           CI_MODIN_ENGINES: "dask"
 
-      - name: Upload coverage to Codecov
-        uses: "codecov/codecov-action@v1"
+      # - name: Upload coverage to Codecov
+      #   uses: "codecov/codecov-action@v1"
 
-      - name: Check Docstrings
-        run: >
-          nox
-          -db virtualenv -r -v
-          --non-interactive
-          --session "doctests-${{ matrix.python-version }}"
+      # - name: Check Docstrings
+      #   run: >
+      #     nox
+      #     -db virtualenv -r -v
+      #     --non-interactive
+      #     --session "doctests-${{ matrix.python-version }}"
 
-      - name: Check Docs
-        run: >
-          nox
-          -db virtualenv -r -v
-          --non-interactive
-          --session "docs-${{ matrix.python-version }}"
+      # - name: Check Docs
+      #   run: >
+      #     nox
+      #     -db virtualenv -r -v
+      #     --non-interactive
+      #     --session "docs-${{ matrix.python-version }}"
